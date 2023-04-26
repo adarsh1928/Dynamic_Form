@@ -1,0 +1,23 @@
+.main-field-choose-file{
+    margin-top: 20vh;
+    margin-bottom: 5vh;
+    font-size: 25px;
+}
+.input-of-file-input{
+    margin-left: 20px;
+    font-size: 20px;
+    
+}
+.main-field-choose-dropdown{
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    margin-right: 30vh;
+    font-size: 25px;
+}
+.label-dropdown-input , .label-normal-input {
+    
+    margin-right: 5vh;
+}
+.select-dropdown-input , .input-of-normal-input{
+    font-size: 20px;
+}
