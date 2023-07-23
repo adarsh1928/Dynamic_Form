@@ -4,6 +4,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 import PageForTakingInputFromUser from './PageForTakingInputFromUser';
 import Header from '../Header/Header';
+import Dropdown from './DropDown';
+import FileInput from './FileInput';
+import NormalInput from './NormalInput';
+import DropDownOption from './DropDownOption';
+import RadioInput from './RadioInput';
+import RadioInputOptions from './RadioInputOptions';
 
 export default function MainInputFields() {
 
@@ -16,17 +22,17 @@ export default function MainInputFields() {
     const [optionsList, setOptionsList] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
- 
-    function handleSubmit(e) {
-        e.preventDefault();
-        setIsSubmitting(true);
-       
-        setIsSubmitting(false);
-      
-       let inputListString=JSON.stringify(inputList);
 
-        navigate("/PageForTakingInputFromUser",{
-            state:{inputList:inputListString}
+    function handleSubmit(e) {
+        // e.preventDefault();
+
+
+        setIsSubmitting(false);
+
+        let inputListString = JSON.stringify(inputList);
+
+        navigate("/PageForTakingInputFromUser", {
+            state: { inputList: inputListString }
         })
     }
 
@@ -69,97 +75,128 @@ export default function MainInputFields() {
 
     return (
         <>
-        
+
             <Header />
             <div style={{ marginTop: "150px", marginLeft: "90vh" }} >
                 <h3>Choose input types</h3>
                 <form onSubmit={handleSubmit}>
                     <div style={{ display: "flex", flexDirection: "column", marginLeft: "20px", fontSize: "20px" }}>
-                        <label style={{ marginBottom: "10px" }}>
-                            <input
-                                type="radio"
-                                value="file"
-                                checked={selectedOption === "file"}
-                                onChange={handleOptionChange}
-                                disabled={isSubmitting}
-                            />
-                            File Input
-                        </label>
-                        <label style={{ marginBottom: "10px" }}>
-                            <input
-                                type="radio"
-                                value="dropdown"
-                                checked={selectedOption === "dropdown"}
-                                onChange={handleOptionChange}
-                                disabled={isSubmitting}
-                            />
-                            Dropdown Input
-                        </label>
-                        <label style={{ marginBottom: "10px" }}>
-                            <input
-                                type="radio"
-                                value="normal"
-                                checked={selectedOption === "normal"}
-                                onChange={handleOptionChange}
-                                disabled={isSubmitting}
-                            />
-                            Normal Input
-                        </label>
+
+                        <FileInput
+                            selectedOption={selectedOption}
+                            handleOptionChange={handleOptionChange}
+                            isSubmitting={isSubmitting}
+                        />
+
+                        <Dropdown
+                            selectedOption={selectedOption}
+                            handleOptionChange={handleOptionChange}
+                            isSubmitting={isSubmitting}
+                        />
+
+                        <NormalInput
+                            selectedOption={selectedOption}
+                            handleOptionChange={handleOptionChange}
+                            isSubmitting={isSubmitting}
+                        />
+                        <RadioInput
+                            selectedOption={selectedOption}
+                            handleOptionChange={handleOptionChange}
+                            isSubmitting={isSubmitting}
+                        />
+
+
+
                     </div>
+
                     <button style={{ marginLeft: "50px", marginTop: "20px", marginBottom: "30px", fontSize: "20px" }} type="submit" disabled={isSubmitting}>Final Submit</button>
                 </form>
+
                 {selectedOption && (
+
                     <div>
+
                         <label style={{ marginBottom: "35px", fontSize: "17px" }}>
                             Label :
-                            <input style={{ marginLeft: "20px", marginRight: "15px" ,fontSize:"18px" }} type="text" value={labelName} onChange={handleLabelChange} />
+                            <input style={{ marginLeft: "20px", marginRight: "15px", fontSize: "18px" }} type="text" value={labelName} onChange={handleLabelChange} />
                         </label>
-                        {selectedOption === "dropdown" &&
-                            <div>
-                                <label style={{ fontSize: "17px" }} >
-                                    Option Value:
-                                    <input style={{ margin: "20px", fontSize: "18px" }} type="text" value={optionValue} onChange={handleOptionInputChange} />
-                                </label>
-                                <button style={{fontSize:"17px"}} onClick={handleAddOptionClick}>Add Option</button>
-                                {optionsList.map((option, index) => (
-                                    <div key={index}>
-                                        <label style={{ fontSize: "17px" }}>
-                                            option {index + 1}:
-                                            <input style={{ margin: "8px", fontSize: "18px" }} type="text" value={option} onChange={(e) => {
-                                                const updatedList = [...optionsList];
-                                                updatedList[index] = e.target.value;
-                                                setOptionsList(updatedList);
-                                            }} />
-                                        </label>
-                                        <button  onClick={() => handleDeleteOptionClick(index)}>Delete Option</button>
-                                    </div>
-                                ))}
-                            </div>
+
+                        {selectedOption === "dropdown" && (
+
+                            <DropDownOption
+                                setOptionsList={setOptionsList}
+                                optionValue={optionValue}
+                                handleOptionInputChange={handleOptionInputChange}
+                                handleAddOptionClick={handleAddOptionClick}
+                                optionsList={optionsList}
+                                handleDeleteOptionClick={handleDeleteOptionClick}
+                            />
+                        )}
+                        {
+                            selectedOption === "radio" && (
+                                <RadioInputOptions
+                                    setOptionsList={setOptionsList}
+                                    optionValue={optionValue}
+                                    handleOptionInputChange={handleOptionInputChange}
+                                    handleAddOptionClick={handleAddOptionClick}
+                                    optionsList={optionsList}
+                                    handleDeleteOptionClick={handleDeleteOptionClick} />
+                            )
                         }
-                        <button style={{marginTop:"20px", marginLeft: "30px", fontSize: "17px" }} onClick={handleAddClick}>Add</button>
                     </div>
                 )}
-                <div>
-                    {inputList.map((input) => {
-                        return (
-                            <div key={input.id}>
-                                <label style={{ margin: "10px", fontSize: "18px" }}>{input.label}:</label>
-                                {input.type === "file" && <input type="file" />}
-                                {input.type === "dropdown" && (
-                                    <select style={{ fontSize: "17px" }}>
-                                        {input.options.map((option) => (
-                                            <option key={option}>{option}</option>
-                                        ))}
-                                    </select>
-                                )}
-                                {input.type === "normal" && <input type="text" />}
-                                <button style={{ marginLeft: "50px", marginTop: "20px", marginBottom: "30px", fontSize: "15px" }}  onClick={() => handleDeleteClick(input.id)}>Delete</button>
-                            </div>
-                        );
-                    })}
-                </div>
+
+                {selectedOption && (
+                    <button style={{ marginTop: "20px", marginLeft: "30px", fontSize: "17px" }} onClick={handleAddClick}>
+                        Add
+                    </button>
+                )}
+
 
             </div>
+            <div>
+                {inputList.map((input) => {
+                    return (
+                        <div key={input.id}>
+                            <label style={{ margin: "10px", fontSize: "18px" }}>{input.label}:</label>
+                            {input.type === "file" && <input type="file" />}
+                            {input.type === "dropdown" && (
+                                <select style={{ fontSize: "17px" }}>
+                                    {input.options.map((option) => (
+                                        <option key={option}>{option}</option>
+                                    ))}
+                                </select>
+                            )}
+                            {input.type === "radio" && (
+                                <div>
+                                    {input.options.map((option) => (
+                                        <div key={option}>
+                                            <input
+                                                type="radio"
+                                                id={option}
+                                                value={option}
+                                                checked={selectedOption === option}
+                                                onChange={handleOptionChange}
+                                                disabled={isSubmitting}
+                                            />
+                                            <label htmlFor={option}>{option}</label>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            {input.type === "normal" && <input type="text" />}
+                            <button style={{ marginLeft: "50px", marginTop: "20px", marginBottom: "30px", fontSize: "15px" }} onClick={() => handleDeleteClick(input.id)}>Delete</button>
+
+
+
+
+                        </div>
+                    );
+                })}
+            </div>
+
+
         </>
     );
 }

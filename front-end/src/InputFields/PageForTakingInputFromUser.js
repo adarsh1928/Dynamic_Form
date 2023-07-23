@@ -32,7 +32,7 @@ const PageForTakingInputFromUser = () => {
     return (
         <>
             <h2 style={{ textAlign: "center" }}>Please Enter/Select the Inputs</h2>
-            <form style={{ marginTop: "150px", marginLeft: "650px" }} onSubmit={handleSubmit}>
+            <form style={{ marginTop: "150px", marginLeft: "650px" }} >
                 {formData.map((field) => {
                     if (field.type === "file") {
                         return (
